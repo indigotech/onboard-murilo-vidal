@@ -1,0 +1,24 @@
+{
+  "name": "onboard-murilo-vidal",
+  "version": "1.0.0",
+  "description": "Onboarding project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/indigotech/onboard-murilo-vidal.git"
+  },
+  "author": "M.V.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/indigotech/onboard-murilo-vidal/issues"
+  },
+  "homepage": "https://github.com/indigotech/onboard-murilo-vidal#readme",
+  "dependencies": {
+    "express": "4.17.3",
+    "express-graphql": "0.12.0",
+    "graphql": "15.8.0"
+  }
+}
