@@ -17,4 +17,3 @@ services:
       - ./db/dumps:/app-db-dumps
     env_file:
     - .env.test
-    
