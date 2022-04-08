@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import depthLimit from "graphql-depth-limit";
@@ -5,6 +6,15 @@ import { createServer } from "http";
 import compression from "compression";
 import cors from "cors";
 import { schema } from "./schema";
+=======
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import depthLimit from 'graphql-depth-limit';
+import { createServer } from 'http';
+import compression from 'compression';
+import cors from 'cors';
+import schema from './schema';
+>>>>>>> c21e3ba (added eslint package)
 const app = express();
 
 (async () => {
