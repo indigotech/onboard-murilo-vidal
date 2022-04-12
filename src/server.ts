@@ -4,11 +4,43 @@ import depthLimit from 'graphql-depth-limit';
 import { createServer } from 'http';
 import compression from 'compression';
 import cors from 'cors';
-import { schema } from './schema';
+import { buildSchema } from 'type-graphql';
+import { UserResolver } from './data/resolver/user.resolver';
+import { createConnection, useContainer } from 'typeorm';
+import { UserEntity } from './data/entity/user.entity';
+import * as dotenv from 'dotenv';
+import Container from 'typedi';
 
+dotenv.config();
 export class GraphQLServer {
   public async startServer() {
+    try {
+      useContainer(Container);
+      await createConnection({
+        type: 'postgres',
+        host: process.env.POSTGRES_HOST,
+        port: 5432,
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB,
+        synchronize: true,
+        logging: false,
+        entities: [UserEntity],
+        migrations: [],
+        subscribers: [],
+      });
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to initialize database connection');
+    }
+
+    const schema = await buildSchema({
+      resolvers: [UserResolver],
+      container: Container,
+    });
+
     const app = express();
+
     const server = new ApolloServer({
       schema,
       validationRules: [depthLimit(7)],
