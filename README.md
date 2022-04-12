@@ -17,5 +17,6 @@ This project was created using on Arch Linux with VSCode and
 
 - clone the repo with `git clone https://github.com/indigotech/onboard-murilo-vidal.git`
 - create a new `.env` by copying the `.env.test` and replacing your environment information
+- install Node dependencies running `npm i`
 - run `docker-compose up` to start the database containers
 - run `npm run start:dev` for a local, debuggable instance
