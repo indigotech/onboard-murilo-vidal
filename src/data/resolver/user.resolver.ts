@@ -5,19 +5,19 @@ import { UserEntity } from '../entity/user.entity';
 import { UserInputType } from '../type/user-input.type';
 import { UserOutputType } from '../type/user-output.type';
 
-@Resolver((of) => UserEntity)
+@Resolver()
 export class UserResolver {
   constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
-  @Query((returns) => [UserOutputType])
+  @Query(() => [UserOutputType])
   public users(): Promise<UserOutputType[]> {
     return this.userRepository.find();
   }
 
-  @Mutation((returns) => UserOutputType)
+  @Mutation(() => UserOutputType)
   async createUser(@Arg('userInput') userInput: UserInputType): Promise<UserOutputType> {
     const user = this.userRepository.create({ ...userInput });
 
-    return await this.userRepository.save(user);
+    return this.userRepository.save(user);
   }
 }
