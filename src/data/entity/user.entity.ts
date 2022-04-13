@@ -6,11 +6,14 @@ export class UserEntity {
   id!: number;
 
   @Column()
-  firstName!: string;
+  name!: string;
 
   @Column()
-  lastName!: string;
+  email!: string;
 
   @Column()
-  age!: number;
+  dateOfBirth!: string;
+
+  @Column()
+  password!: string;
 }
