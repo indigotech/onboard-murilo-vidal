@@ -10,8 +10,14 @@ import { createConnection, useContainer } from 'typeorm';
 import { UserEntity } from './data/entity/user.entity';
 import * as dotenv from 'dotenv';
 import Container from 'typedi';
+import path from 'path';
+import { HelloWorldResolver } from './data/resolver/hello-world.resolver';
 
-dotenv.config();
+if (process.env.TEST === 'OK') {
+  dotenv.config({ path: path.join(__dirname, '..') + '/test.env' });
+} else {
+  dotenv.config();
+}
 export class GraphQLServer {
   public async startServer() {
     try {
@@ -35,7 +41,7 @@ export class GraphQLServer {
     }
 
     const schema = await buildSchema({
-      resolvers: [UserResolver],
+      resolvers: [UserResolver, HelloWorldResolver],
       container: Container,
     });
 
