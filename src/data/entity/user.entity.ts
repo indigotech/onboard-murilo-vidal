@@ -12,7 +12,7 @@ export class UserEntity {
   email!: string;
 
   @Column()
-  dateOfBirth!: string;
+  dateOfBirth!: Date;
 
   @Column()
   password!: string;
