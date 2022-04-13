@@ -1,7 +1,6 @@
 import { Resolver, Query } from 'type-graphql';
-import { UserEntity } from '../entity/user.entity';
 
-@Resolver((of) => UserEntity)
+@Resolver()
 export class HelloWorldResolver {
   @Query((returns) => String)
   public helloWorld(): string {
