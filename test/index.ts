@@ -1,4 +1,5 @@
 import { GraphQLServer } from '../src/server';
+import { expect } from 'chai';
 
 const url = `http://localhost:3000/`;
 const request = require('supertest')(url);
@@ -16,8 +17,8 @@ describe('Graphql helloWorld', function () {
         query: '{ helloWorld }',
       })
       .end((err: any, res: { body: { data: { helloWorld: string } } }) => {
-        console.log('Printing response:');
-        console.log(res.body.data.helloWorld);
+        expect(res.body.data.helloWorld).to.be.equal('Hello, world!');
+
         done();
       });
   });
