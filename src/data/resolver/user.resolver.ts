@@ -6,6 +6,8 @@ import { UserInputType } from '../type/user-input.type';
 import { UserOutputType } from '../type/user-output.type';
 import bcrypt from 'bcrypt';
 import { InvalidDataError } from '../../error/invalid-data.error';
+import { LoginInputType } from '../type/login-input.type';
+import { LoginOutputType } from '../type/login-output.type';
 
 @Resolver()
 export class UserResolver {
@@ -26,5 +28,17 @@ export class UserResolver {
     user.password = bcrypt.hashSync(user.password, 10);
 
     return this.userRepository.save(user);
+  }
+  @Mutation(() => LoginOutputType)
+  async login(@Arg('loginInput') loginInput: LoginInputType): Promise<LoginOutputType> {
+    return {
+      user: {
+        id: 1,
+        name: 'User Name',
+        email: 'User e-mail',
+        birthDate: new Date('04-25-1990'),
+      },
+      token: 'the_token',
+    };
   }
 }
