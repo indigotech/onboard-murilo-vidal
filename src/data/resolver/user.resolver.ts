@@ -19,12 +19,8 @@ export class UserResolver {
   async createUser(@Arg('userInput') userInput: UserInputType): Promise<UserOutputType> {
     const user = this.userRepository.create({ ...userInput });
 
-    try {
-      user.password = bcrypt.hashSync(user.password, 10);
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to hash given password');
-    }
-    return await this.userRepository.save(user);
+    user.password = bcrypt.hashSync(user.password, 10);
+
+    return this.userRepository.save(user);
   }
 }

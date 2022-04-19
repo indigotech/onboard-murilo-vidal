@@ -9,6 +9,7 @@ import { UserResolver } from './data/resolver/user.resolver';
 import Container from 'typedi';
 import { HelloWorldResolver } from './data/resolver/hello-world.resolver';
 import { DatabaseService } from './database.service';
+import { ErrorHandler } from './error/error.handler';
 
 export class GraphQLServer {
   public async startServer() {
@@ -29,6 +30,7 @@ export class GraphQLServer {
     const server = new ApolloServer({
       schema,
       validationRules: [depthLimit(7)],
+      formatError: ErrorHandler,
     });
     const corsOptions = cors({ origin: true });
 
