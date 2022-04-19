@@ -3,11 +3,16 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserEntity } from '../entity/user.entity';
 import bcrypt from 'bcrypt';
+<<<<<<< HEAD
 import { InvalidDataError } from '../../error/invalid-data.error';
 import { UserInput } from '../type/user-input.type';
 import { User } from '../type/user.type';
 import { LoginInput } from '../type/login-input.type';
 import { Login } from '../type/login.type';
+=======
+import { LoginInputType } from '../type/login-input.type';
+import { LoginOutputType } from '../type/login-output.type';
+>>>>>>> added types and login mutation
 
 @Resolver()
 export class UserResolver {
