@@ -48,6 +48,31 @@ describe('User endpoint', async function () {
 
     expect(bcrypt.compare('machado45515', user.password));
   });
+
+  it('succesfully logs in', async () => {
+    await createUser();
+    const connection = getConnection();
+    const userRepository = connection.getRepository(UserEntity);
+    const user = await userRepository.findOneOrFail();
+
+    const response = request.post('graphql').send({
+      query:
+        'mutation { login(loginInput: { name: "Machado de Assis", email: "machado@assis.com", password: "machado45515" , birthDate: "10-10-1999" }){ id, name, email, birthDate} }',
+    });
+    expect(response.body.data.login).to.be.deep.eq({
+      data: {
+        login: {
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            birthDate: new Date('10-10-1999').toISOString(),
+          },
+          token: 'the_token',
+        },
+      },
+    });
+  });
 });
 
 async function createUser(): Promise<any> {
