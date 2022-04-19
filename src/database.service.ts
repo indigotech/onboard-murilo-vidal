@@ -1,13 +1,9 @@
 import Container from 'typedi';
 import { createConnection, useContainer } from 'typeorm';
 import { UserEntity } from './data/entity/user.entity';
-import * as dotenv from 'dotenv';
+import { loadEnv } from './function/load-env.function';
 
-if (process.env.npm_command === 'test') {
-  dotenv.config({ path: './.env.test' });
-} else {
-  dotenv.config();
-}
+loadEnv();
 
 export class DatabaseService {
   public async startConnection() {

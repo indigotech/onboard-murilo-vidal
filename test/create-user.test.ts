@@ -22,47 +22,36 @@ after(async () => {
   await connection.close();
 });
 
-describe('User endpoint', function () {
-  it('returns the data from the created a user', (done) => {
-    request
-      .post('graphql')
-      .send({
-        query:
-          'mutation { createUser(userInput: { name: "Machado de Assis", email: "machado@assis.com", password: "machado45515" , dateOfBirth: "06-21-1839" }){ id, name, email, dateOfBirth} }',
-      })
-      .end((_err: any, res: { body: { data: any } }) => {
-        expect(res.body.data.createUser).to.include({
-          name: 'Machado de Assis',
-          email: 'machado@assis.com',
-        });
-        expect(res.body.data.createUser.id).to.exist;
-        expect(res.body.data.createUser.dateOfBirth).to.exist;
+describe('User endpoint', async function () {
+  it('saves and returns the data from the created a user', async () => {
+    const response = await createUser();
+    const connection = getConnection();
+    const userRepository = connection.getRepository(UserEntity);
 
-        done();
-      });
-  }),
-    it('saves the user in the database', async () => {
-      await createUser();
-      const connection = getConnection();
-      const userRepository = connection.getRepository(UserEntity);
-      const user = await userRepository.findOne();
+    const user = await userRepository.findOneOrFail();
 
-      expect(user?.name).to.be.equal('Machado de Assis');
-    }),
-    it('saves a hashed password', async () => {
-      await createUser();
-      const connection = getConnection();
-      const userRepository = connection.getRepository(UserEntity);
-      const user = await userRepository.findOne();
-
-      expect(bcrypt.compare('machado45515', user?.password));
+    expect(response.body.data.createUser).to.be.deep.eq({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      birthDate: new Date('10-10-1999').toISOString(),
     });
+  });
+
+  it('saves a hashed password', async () => {
+    await createUser();
+    const connection = getConnection();
+    const userRepository = connection.getRepository(UserEntity);
+
+    const user = await userRepository.findOneOrFail();
+
+    expect(bcrypt.compare('machado45515', user?.password));
+  });
 });
 
-// To become a fixture later
 async function createUser(): Promise<any> {
   return request.post('graphql').send({
     query:
-      'mutation { createUser(userInput: { name: "Machado de Assis", email: "machado@assis.com", password: "machado45515" , dateOfBirth: "10-10-1999" }){ id, name, email, dateOfBirth} }',
+      'mutation { createUser(userInput: { name: "Machado de Assis", email: "machado@assis.com", password: "machado45515" , birthDate: "10-10-1999" }){ id, name, email, birthDate} }',
   });
 }
