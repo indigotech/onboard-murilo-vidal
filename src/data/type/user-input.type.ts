@@ -20,5 +20,5 @@ export class UserInputType implements Partial<UserEntity> {
   password!: string;
 
   @Field()
-  dateOfBirth!: Date;
+  birthDate!: Date;
 }

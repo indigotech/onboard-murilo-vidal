@@ -1,9 +1,9 @@
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, Int } from 'type-graphql';
 import { UserEntity } from '../entity/user.entity';
 
 @ObjectType()
 export class UserOutputType implements Partial<UserEntity> {
-  @Field(() => ID)
+  @Field(() => Int)
   id!: number;
 
   @Field()
@@ -13,5 +13,5 @@ export class UserOutputType implements Partial<UserEntity> {
   email!: string;
 
   @Field()
-  dateOfBirth!: Date;
+  birthDate!: Date;
 }
