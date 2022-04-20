@@ -5,6 +5,7 @@ import { UserEntity } from '../entity/user.entity';
 import { UserInputType } from '../type/user-input.type';
 import { UserOutputType } from '../type/user-output.type';
 import bcrypt from 'bcrypt';
+import { InvalidDataError } from '../../error/invalid-data.error';
 
 @Resolver()
 export class UserResolver {
@@ -17,6 +18,9 @@ export class UserResolver {
 
   @Mutation(() => UserOutputType)
   async createUser(@Arg('userInput') userInput: UserInputType): Promise<UserOutputType> {
+    if ((await this.userRepository.find({ where: { email: userInput.email } })).length > 0) {
+      throw new InvalidDataError('This email already exists');
+    }
     const user = this.userRepository.create({ ...userInput });
 
     user.password = bcrypt.hashSync(user.password, 10);

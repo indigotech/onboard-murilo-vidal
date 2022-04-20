@@ -1,9 +1,7 @@
 import { formatError, GraphQLError, GraphQLFormattedError } from 'graphql';
 import { ArgumentValidationError } from 'type-graphql';
 import { isBaseError } from './base.error';
-import { DuplicateEmailError } from './duplicate-email.error';
 import { StatusCode } from './error.type';
-import { InternalServerError } from './internal-server.error';
 
 export interface ServerError extends GraphQLFormattedError {
   code?: number;
@@ -21,6 +19,7 @@ export function ErrorHandler(error: GraphQLError): ServerError {
       message: originalError.message,
     });
   }
+
   if (originalError instanceof ArgumentValidationError) {
     const firstMessageParsed = Object.values(
       originalError.validationErrors?.[0].constraints as { [type: string]: string },
@@ -28,14 +27,14 @@ export function ErrorHandler(error: GraphQLError): ServerError {
 
     return (data = {
       code: StatusCode.BadRequest,
-      message: firstMessageParsed ?? 'Internal Error.',
+      message: firstMessageParsed ?? 'Internal server error.',
     });
   }
-  if (/(duplicate key)[\s\S]/.test(error.message)) {
-    return new DuplicateEmailError();
-  }
 
-  return new InternalServerError();
+  return (data = {
+    code: StatusCode.ServerError,
+    message: 'Internal server error.',
+  });
 }
 
 function defaultErrorFormatter(error: any): ServerError {
