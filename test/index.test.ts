@@ -1,19 +1,32 @@
 import { expect } from 'chai';
+import { Connection, getConnection } from 'typeorm';
+import { GraphQLServer } from '../src/server';
 
 const url = `http://localhost:3000/`;
 const request = require('supertest')(url);
 
-describe('Graphql helloWorld', function () {
-  it('Returns Hello, world!', (done) => {
-    request
-      .post('graphql')
-      .send({
-        query: '{ helloWorld }',
-      })
-      .end((err: any, res: { body: { data: { helloWorld: string } } }) => {
-        expect(res.body.data.helloWorld).to.be.equal('Hello, world!');
+describe('Graphql helloWorld', () => {
+  let connection: Connection;
 
-        done();
-      });
+  before(async () => {
+    try {
+      const server = new GraphQLServer();
+      await server.startServer();
+    } finally {
+      connection = getConnection();
+      await connection.synchronize();
+    }
+  });
+
+  after(async () => {
+    await connection.dropDatabase();
+  });
+
+  it('Returns Hello, world!', async () => {
+    const response = await request.post('graphql').send({
+      query: '{ helloWorld }',
+    });
+
+    expect(response.body.data.helloWorld).to.be.equal('Hello, world!');
   });
 });
