@@ -8,4 +8,7 @@ export class LoginInput {
 
   @Field()
   password!: string;
+
+  @Field({ defaultValue: false })
+  rememberMe?: boolean;
 }
