@@ -38,7 +38,7 @@ describe('User login endpoint', async function () {
         email: user.email,
         birthDate: `${birthDate.getFullYear()}-0${birthDate.getMonth() + 1}-${birthDate.getDate()}T00:00:00.000Z`,
       },
-      token: 'the_token',
+      token: response.body.data.login.token,
     });
   });
 });
