@@ -2,9 +2,6 @@ import { expect } from 'chai';
 import { Connection, getConnection, Repository } from 'typeorm';
 import { UserEntity } from '../src/data/entity/user.entity';
 import bcrypt from 'bcrypt';
-import exp from 'constants';
-import { UserFixture } from './fixture/user.fixture';
-import { GraphQLError } from 'graphql';
 
 const url = `http://localhost:3000/`;
 const request = require('supertest')(url);

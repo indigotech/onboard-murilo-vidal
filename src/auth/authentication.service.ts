@@ -1,4 +1,4 @@
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserEntity } from '../data/entity/user.entity';
@@ -33,6 +33,18 @@ export class AuthenticationService {
       return { token: token, user: user };
     } catch (e) {
       throw new InternalServerError('Failed to autenticate.');
+    }
+  }
+  async verifyToken(token?: string) {
+    if (!token) {
+      throw new InvalidDataError('Token missing.');
+    }
+    try {
+      verify(token, authConfig.secret) as any;
+
+      return true;
+    } catch (error) {
+      throw new InvalidDataError('Invalid token.');
     }
   }
 }

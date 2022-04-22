@@ -20,4 +20,7 @@ export class UserInput implements Partial<UserEntity> {
 
   @Field()
   birthDate!: Date;
+
+  @Field()
+  token?: string;
 }

@@ -24,9 +24,14 @@ export class UserResolver {
 
   @Mutation(() => User)
   async createUser(@Arg('userInput') userInput: UserInput): Promise<User> {
+    if (!(await this.authenticationService.verifyToken(userInput.token))) {
+      throw new InvalidDataError('Unauthorized');
+    }
+
     if ((await this.userRepository.find({ where: { email: userInput.email } })).length > 0) {
       throw new InvalidDataError('This email already exists');
     }
+
     const user = this.userRepository.create({ ...userInput });
 
     user.password = bcrypt.hashSync(user.password, 10);
