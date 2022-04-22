@@ -47,7 +47,7 @@ describe('User login endpoint', async function () {
         name: user.name,
         email: user.email,
       },
-      token: 'the_token',
+      token: response.body.data.login.token,
     });
   });
 });
