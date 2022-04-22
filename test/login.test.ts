@@ -29,14 +29,13 @@ describe('User login endpoint', async function () {
       query: `mutation { login(loginInput: { email: "${user.email}", password: "${new UserFixture().password}" }){
       user { id, name email birthDate } token }}`,
     });
-    const birthDate = new Date(user.birthDate);
 
     expect(response.body.data.login).to.be.deep.eq({
       user: {
         id: user.id,
         name: user.name,
         email: user.email,
-        birthDate: `${birthDate.getFullYear()}-0${birthDate.getMonth() + 1}-${birthDate.getDate()}T00:00:00.000Z`,
+        birthDate: new Date(user.birthDate).toISOString(),
       },
       token: response.body.data.login.token,
     });
