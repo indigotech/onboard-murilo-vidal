@@ -11,7 +11,7 @@ export class UserEntity {
   @Column({ unique: true })
   email!: string;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'timestamp' })
   birthDate!: Date;
 
   @Column()
