@@ -3,16 +3,11 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { UserEntity } from '../entity/user.entity';
 import bcrypt from 'bcrypt';
-<<<<<<< HEAD
 import { InvalidDataError } from '../../error/invalid-data.error';
 import { UserInput } from '../type/user-input.type';
 import { User } from '../type/user.type';
 import { LoginInput } from '../type/login-input.type';
 import { Login } from '../type/login.type';
-=======
-import { LoginInputType } from '../type/login-input.type';
-import { LoginOutputType } from '../type/login-output.type';
->>>>>>> added types and login mutation
 
 @Resolver()
 export class UserResolver {
@@ -37,14 +32,18 @@ export class UserResolver {
 
   @Mutation(() => Login)
   async login(@Arg('loginInput') loginInput: LoginInput): Promise<Login> {
-    return {
-      user: {
-        id: 1,
-        name: 'User Name',
-        email: 'User e-mail',
-        birthDate: new Date('04-25-1990'),
-      },
-      token: 'the_token',
-    };
+    const user = await this.userRepository.findOne({ where: { email: loginInput.email } });
+
+    if (user && (await bcrypt.compare(loginInput.password, user.password))) {
+      const login = new Login();
+      login.token = 'the_token';
+      login.user = user;
+      //TODO Change UserEntity 'birthDate' to DateTime type as it is mapped as a Date by Typeorm, unlike the type Date that gets mapped as string
+      login.user.birthDate = new Date(user.birthDate);
+
+      return login;
+    } else {
+      throw new InvalidDataError('Incorrect password or email.');
+    }
   }
 }
