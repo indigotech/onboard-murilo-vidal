@@ -8,14 +8,13 @@ import { buildSchema } from 'type-graphql';
 import { UserResolver } from './data/resolver/user.resolver';
 import Container from 'typedi';
 import { HelloWorldResolver } from './data/resolver/hello-world.resolver';
-import { DatabaseService } from './database.service';
 import { ErrorHandler } from './error/error.handler';
+import { startDatabaseConnection } from './database.service';
 
 export class GraphQLServer {
   public async startServer() {
     try {
-      const databaseService = new DatabaseService();
-      await databaseService.startConnection();
+      await startDatabaseConnection();
     } catch (error) {
       console.error('Failed to initialize database');
     }

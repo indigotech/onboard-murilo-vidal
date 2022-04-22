@@ -1,27 +1,22 @@
 import { expect } from 'chai';
-import { Connection, getConnection } from 'typeorm';
+import { Connection, getConnection, Repository } from 'typeorm';
+import { UserEntity } from '../src/data/entity/user.entity';
 
 const url = `http://localhost:3000/`;
 const request = require('supertest')(url);
 
 describe('User login endpoint', async function () {
   let connection: Connection;
+  let userRepository: Repository<UserEntity>;
 
   before(async () => {
     connection = getConnection();
+    userRepository = connection.getRepository(UserEntity);
     await connection.synchronize();
-  });
-
-  after(async () => {
-    await connection.dropDatabase();
   });
 
   beforeEach(async () => {
-    await connection.synchronize();
-  });
-
-  afterEach(async () => {
-    await connection.dropDatabase();
+    await userRepository.clear();
   });
 
   it('succesfully logs in', async () => {
