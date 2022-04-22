@@ -14,12 +14,7 @@ describe('Graphql helloWorld', () => {
       await server.startServer();
     } finally {
       connection = getConnection();
-      await connection.synchronize();
     }
-  });
-
-  after(async () => {
-    await connection.dropDatabase();
   });
 
   it('Returns Hello, world!', async () => {
