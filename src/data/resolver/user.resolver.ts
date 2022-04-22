@@ -9,6 +9,8 @@ import { User } from '../type/user.type';
 import { LoginInput } from '../type/login-input.type';
 import { Login } from '../type/login.type';
 import { AuthenticationService } from '../../auth/authentication.service';
+import { QueryUserInput } from '../type/query-user-input.type';
+import { InternalServerError } from '../../error/internal-server.error';
 
 @Resolver()
 export class UserResolver {
@@ -20,6 +22,15 @@ export class UserResolver {
   @Query(() => [User])
   public users(): Promise<User[]> {
     return this.userRepository.find();
+  }
+
+  @Query(() => User)
+  public async user(@Arg('queryUserInput') queryUserInput: QueryUserInput): Promise<User> {
+    if (!(await this.authenticationService.verifyToken(queryUserInput.token))) {
+      throw new InvalidDataError('Unauthorized.');
+    }
+
+    return this.userRepository.findOneOrFail(queryUserInput.id);
   }
 
   @Mutation(() => User)

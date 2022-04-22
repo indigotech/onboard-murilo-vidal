@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Connection, DeepPartial, getConnection, Repository } from 'typeorm';
+import { Connection, getConnection, Repository } from 'typeorm';
 import { UserEntity } from '../src/data/entity/user.entity';
 import bcrypt from 'bcrypt';
 import { UserFixture } from './fixture/user.fixture';
@@ -65,7 +65,7 @@ describe('User endpoint', async function () {
       id: user.id,
       name: user.name,
       email: user.email,
-      birthDate: new Date('10-10-1999').toISOString(),
+      birthDate: new Date(user.birthDate).toISOString(),
     });
   });
 
@@ -85,7 +85,7 @@ describe('User endpoint', async function () {
       },
     );
 
-    const response = request.post('graphql').send({
+    await request.post('graphql').send({
       query: `mutation { createUser(userInput: { name: "Machado de Assis", email: "machado@assis.com", password: "machado45515" , birthDate: "10-10-1999", token: "${token}" }){ id, name, email, birthDate} }`,
     });
 
