@@ -12,6 +12,7 @@ export class AuthenticationService {
   constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
   async auth(login: LoginInput): Promise<{ token: string; user: UserEntity }> {
+    let expiresIn = authConfig.expires;
     try {
       const user = await this.userRepository.findOne({ where: { email: login.email } });
 
@@ -25,7 +26,7 @@ export class AuthenticationService {
         },
         authConfig.secret,
         {
-          expiresIn: authConfig.expires,
+          expiresIn: login.rememberMe ? '7d' : authConfig.expires,
         },
       );
 
