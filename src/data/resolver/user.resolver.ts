@@ -31,17 +31,14 @@ export class UserResolver {
   }
 
   @Mutation(() => Login)
-  async login(@Arg('loginInput') loginInput: LoginInput): Promise<Login> {
+  async login(@Arg('loginInput') loginInput: LoginInput): Promise<{ user: UserEntity; token: string }> {
     const user = await this.userRepository.findOne({ where: { email: loginInput.email } });
 
     if (user && (await bcrypt.compare(loginInput.password, user.password))) {
-      const login = new Login();
-      login.token = 'the_token';
-      login.user = user;
-      //TODO Change UserEntity 'birthDate' to DateTime type as it is mapped as a Date by Typeorm, unlike the type Date that gets mapped as string
-      login.user.birthDate = new Date(user.birthDate);
-
-      return login;
+      return {
+        user,
+        token: 'the_token',
+      };
     } else {
       throw new InvalidDataError('Incorrect password or email.');
     }
