@@ -2,7 +2,7 @@ import { ObjectType, Field, ID, Int } from 'type-graphql';
 import { UserEntity } from '../entity/user.entity';
 
 @ObjectType()
-export class UserOutputType implements Partial<UserEntity> {
+export class User implements Partial<UserEntity> {
   @Field(() => Int)
   id!: number;
 

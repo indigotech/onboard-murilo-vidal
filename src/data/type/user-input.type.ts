@@ -3,7 +3,7 @@ import { Field, InputType } from 'type-graphql';
 import { UserEntity } from '../entity/user.entity';
 
 @InputType()
-export class UserInputType implements Partial<UserEntity> {
+export class UserInput implements Partial<UserEntity> {
   @Field()
   name!: string;
 
