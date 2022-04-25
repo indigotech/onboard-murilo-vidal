@@ -10,7 +10,8 @@
     "build:dev": "nodemon 'src/index.ts' --exec 'ts-node' src/index.ts -e ts,graphql",
     "lint": "eslint --ext .ts src",
     "lint:fix": "eslint --ext .js,.ts src --fix",
-    "test": "ts-mocha test/*.ts --exit"
+    "test": "ts-mocha test/*.ts --exit",
+    "seed": "ts-node test/seed/seed.ts"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/indigotech/onboard-murilo-vidal#readme",
   "devDependencies": {
+    "@faker-js/faker": "6.2.0",
     "@types/bcrypt": "5.0.0",
     "@types/chai": "4.3.0",
     "@types/compression": "1.7.2",
