@@ -18,10 +18,6 @@ describe('Graphql helloWorld', () => {
     }
   });
 
-  after(async () => {
-    await connection.dropDatabase();
-  });
-
   it('Returns Hello, world!', async () => {
     const response = await request.post('graphql').send({
       query: '{ helloWorld }',

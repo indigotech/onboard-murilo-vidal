@@ -31,15 +31,16 @@ export class UserResolver {
   }
 
   @Mutation(() => Login)
-  async login(@Arg('loginInput') loginInput: LoginInput): Promise<Login> {
-    return {
-      user: {
-        id: 1,
-        name: 'User Name',
-        email: 'User e-mail',
-        birthDate: new Date('04-25-1990'),
-      },
-      token: 'the_token',
-    };
+  async login(@Arg('loginInput') loginInput: LoginInput): Promise<{ user: UserEntity; token: string }> {
+    const user = await this.userRepository.findOne({ where: { email: loginInput.email } });
+
+    if (user && (await bcrypt.compare(loginInput.password, user.password))) {
+      return {
+        user,
+        token: 'the_token',
+      };
+    } else {
+      throw new InvalidDataError('Incorrect password or email.');
+    }
   }
 }
