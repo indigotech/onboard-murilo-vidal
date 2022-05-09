@@ -14,6 +14,7 @@ describe('Graphql helloWorld', () => {
       await server.startServer();
     } finally {
       connection = getConnection();
+      await connection.synchronize();
     }
   });
 
