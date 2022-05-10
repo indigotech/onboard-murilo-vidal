@@ -8,10 +8,14 @@ import { UserInput } from '../type/user-input.type';
 import { User } from '../type/user.type';
 import { LoginInput } from '../type/login-input.type';
 import { Login } from '../type/login.type';
+import { AuthenticationService } from '../../auth/authentication.service';
 
 @Resolver()
 export class UserResolver {
-  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+  authenticationService: AuthenticationService;
+  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {
+    this.authenticationService = new AuthenticationService(userRepository);
+  }
 
   @Query(() => [User])
   public users(): Promise<User[]> {
@@ -31,16 +35,15 @@ export class UserResolver {
   }
 
   @Mutation(() => Login)
-  async login(@Arg('loginInput') loginInput: LoginInput): Promise<{ user: UserEntity; token: string }> {
-    const user = await this.userRepository.findOne({ where: { email: loginInput.email } });
+  async login(@Arg('loginInput') loginInput: LoginInput): Promise<Login> {
+    const authCredentials = await this.authenticationService.auth(loginInput);
+    const login = new Login();
 
-    if (user && (await bcrypt.compare(loginInput.password, user.password))) {
-      return {
-        user,
-        token: 'the_token',
-      };
-    } else {
-      throw new InvalidDataError('Incorrect password or email.');
-    }
+    login.token = authCredentials.token;
+    login.user = authCredentials.user;
+    //TODO Change UserEntity 'birthDate' to DateTime type as it is mapped as a Date by Typeorm, unlike the type Date that gets mapped as string
+    login.user.birthDate = new Date(authCredentials.user.birthDate);
+
+    return login;
   }
 }
